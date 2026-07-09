@@ -24,7 +24,7 @@ The repository is organized course-wise to provide a structured learning path an
 
 ### 📁 ML-DL (PGCMSCC 3.1)
 
-This folder contains practical implementations and study materials related to **Machine Learning** and **Deep Learning**, including:
+This folder contains practical implementations and study materials related to **Machine Learning** and **Deep Learning** taought by Dr. Biswajit Biswas and Prof. Dr. Soumya Pal , including:
 
 * Data preprocessing and feature engineering
 * Supervised and unsupervised learning algorithms
@@ -38,7 +38,7 @@ This folder contains practical implementations and study materials related to **
 
 ### 📁 Soft Computing (PGCMSCC 3.2)
 
-This section focuses on computational intelligence techniques that address complex real-world problems through approximate reasoning and adaptive learning.
+This section focuses on computational intelligence techniques that address complex real-world problems through approximate reasoning and adaptive learning taought by Dr. Biswajit Biswas and Mr. Prasenjit Das, PhD .
 
 Topics include:
 
@@ -54,7 +54,7 @@ Topics include:
 
 ### 📁 Computer Vision (PGCMSCE 3.2)
 
-This folder contains implementations and experiments related to digital image analysis and computer vision.
+This folder contains implementations and experiments related to digital image analysis and computer vision taought by Dr. Biswajit Biswas and Dr. Chayan Halder.
 
 Topics covered include:
 
@@ -71,7 +71,7 @@ Topics covered include:
 
 ### 📁 TensorFlow & PyTorch (PGCMSCC 3.3)
 
-This section includes hands-on projects and implementations using two of the most widely used deep learning frameworks. This will also contain the basics of python in one IPYNB
+This section includes hands-on projects and implementations using two of the most widely used deep learning frameworks taought by Mr. Prasenjit Das, PhD . This will also contain the basics of python in one IPYNB
 
 Contents include:
 
