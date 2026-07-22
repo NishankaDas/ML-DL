@@ -4,7 +4,7 @@
 
 This repository contains the course materials, practical implementations, assignments, and experiments completed as part of the **M.Sc. Computer Science at Ramakrishna Mission Vivekananda Centenary College, Rahara** curriculum. It serves as a centralized collection of code, notebooks, and learning resources covering fundamental and advanced topics in Artificial Intelligence, Machine Learning, Deep Learning, Computer Vision, and modern deep learning frameworks. Notes will be attached at the site sites.google.com/view/nishanka-das
 
-The repository is organized course-wise to provide a structured learning path and easy navigation.
+The repository is organized course-wise to provide a structured learning path and easy navigation. Some corrosponding small datasets are uploded in this repo. 
 
 ---
 
