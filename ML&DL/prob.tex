@@ -1,0 +1,198 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{empheq}
+
+\geometry{margin=1in}
+
+\title{\textbf{Foundations of Probability for Machine Learning}}
+\author{\textbf{Nishanka Das} \\ 
+Department of Computer Science \\ 
+Ramakrishna Mission Vivekananda Centenary College, Rahara}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+For any mistakes found please feel free to mail at: \\
+\url{nishanka.das.rkmvcc@gmail.com}
+\end{center}
+
+\begin{abstract}
+This document outlines the foundational principles of probability theory required for statistical machine learning and deep learning applications. We mathematically formulate the core rules of probability, Bayes' theorem, independence conditions, density estimation metrics, statistical moments, and parameter optimization via Maximum Likelihood Estimation (MLE).
+\end{abstract}
+
+\section{The Core Rules of Probability}
+In machine learning, uncertainty arises from noisy data, finite sample sizes, and imperfect models. To quantify this uncertainty systematically, we establish probability frameworks based on discrete random variables $X$ and $Y$. 
+
+Let $X$ be a random variable taking values $x_i$ (where $i = 1, \dots, M$) and $Y$ be a random variable taking values $y_j$ (where $j = 1, \dots, L$). Consider a total of $N$ identical trials, and let $n_{ij}$ be the number of trials in which $X = x_i$ and $Y = y_j$.
+
+\subsection{Joint Probability}
+The joint probability is the probability that $X$ takes the value $x_i$ and $Y$ takes the value $y_j$ simultaneously. Formally, it is expressed as the fraction of total trials falling into this specific grid intersection:
+\begin{equation}
+P(X=x_i, Y=y_j) = \frac{n_{ij}}{N}
+\end{equation}
+
+\subsection{Marginal Probability}
+The marginal probability is the probability that $X$ takes the value $x_i$ regardless of the value of $Y$. This corresponds to looking at the total count across an entire column or row of outcomes:
+\begin{equation}
+P(X=x_i) = \frac{c_i}{N} \quad \text{where} \quad c_i = \sum_{j=1}^{L} n_{ij}
+\end{equation}
+
+\subsection{The Sum Rule}
+The sum rule states that the marginal probability of an event is obtained by summing the joint probability over all possible outcomes of the remaining variables:
+\begin{equation}
+P(X=x_i) = \sum_{j=1}^{L} P(X=x_i, Y=y_j)
+\end{equation}
+
+\subsection{Conditional Probability}
+The conditional probability $P(Y=y_j \mid X=x_i)$ is the probability that $Y = y_j$ given that $X$ is fixed to $x_i$. Formally, it is the fraction of cases where $X=x_i$ that also satisfy $Y=y_j$:
+\begin{equation}
+P(Y=y_j \mid X=x_i) = \frac{n_{ij}}{c_i}
+\end{equation}
+
+\subsection{The Product Rule}
+By linking joint, marginal, and conditional equations, we derive the product rule, which models the composition of dependent events:
+\begin{equation}
+P(X=x_i, Y=y_j) = \frac{n_{ij}}{N} = \left(\frac{n_{ij}}{c_i}\right) \left(\frac{c_i}{N}\right) = P(Y=y_j \mid X=x_i)P(X=x_i)
+\end{equation}
+
+Using standard statistical shorthand notations, the core rules are summarized as:
+\begin{align}
+\text{\textbf{Sum Rule:}} \quad & P(X) = \sum_{Y} P(X, Y) \\
+\text{\textbf{Product Rule:}} \quad & P(X, Y) = P(Y \mid X)P(X)
+\end{align}
+
+\section{Bayes' Theorem}
+Using the symmetry property of joint probabilities ($P(X, Y) = P(Y, X)$), we can equate two different expressions of the product rule:
+\begin{equation}
+P(Y \mid X)P(X) = P(X \mid Y)P(Y)
+\end{equation}
+
+\subsection{Mathematical Formulation}
+Isolating the conditional probability of interest yields \textbf{Bayes' Theorem}:
+\begin{equation}
+P(Y \mid X) = \frac{P(X \mid Y)P(Y)}{P(X)}
+\end{equation}
+
+Using the sum rule, the denominator (the normalization constant) can be expressed as:
+\begin{equation}
+P(X) = \sum_{Y} P(X \mid Y)P(Y)
+\end{equation}
+
+\subsection{Machine Learning Terminology}
+In the context of statistical inference and model training, the terms are interpreted as:
+\begin{itemize}
+    \item $P(Y)$ is the \textbf{Prior Probability}, representing our beliefs or parameter configurations before observing the current data.
+    \item $P(X \mid Y)$ is the \textbf{Likelihood}, representing how well the parameters or hypotheses explain the observed data.
+    \item $P(Y \mid X)$ is the \textbf{Posterior Probability}, representing our updated uncertainty profile after digesting the evidence.
+\end{itemize}
+
+\section{Independent Random Variables}
+\subsection{Definition and Factoring}
+If the joint distribution of two random variables factors completely into the product of their marginal distributions, the variables are said to be statistically independent:
+\begin{equation}
+P(X, Y) = P(X)P(Y)
+\end{equation}
+
+\subsection{Impact on Conditional Probability}
+By substituting this condition into the product rule, it becomes clear that conditional distributions decouple completely from their conditioning factors:
+\begin{equation}
+P(Y \mid X) = \frac{P(X, Y)}{P(X)} = \frac{P(X)P(Y)}{P(X)} = P(Y)
+\end{equation}
+This indicates that knowing the outcome of $X$ yields no predictive power or new information regarding the behavior of $Y$.
+
+\section{Probability Density Functions (PDFs)}
+When a random variable $X$ is continuous, the probability of it taking an exact, specific single scalar value is zero. Instead, we define probabilities over continuous intervals.
+
+\subsection{Infinitesimal Intervals and Densities}
+The probability that $X$ falls within an infinitesimal interval $(x, x + \delta x)$ is given by $f(x)\delta x$ as \mbox{$\delta x \to 0$}, where $f(x)$ is defined as the \textbf{Probability Density Function (PDF)}. The probability that $x$ lies in an interval $(a, b)$ is given by the definite integral:
+\begin{equation}
+P(X \in (a, b)) = \int_{a}^{b} f(x) \, dx
+\end{equation}
+
+\subsection{Axioms of Continuous Distributions}
+To be a valid probability density function, $f(x)$ must satisfy two core axioms:
+\begin{align}
+f(x) &\ge 0 \quad \forall x \\
+\int_{-\infty}^{\infty} f(x) \, dx &= 1
+\end{align}
+
+\subsection{Cumulative Distribution Function (CDF)}
+The cumulative distribution function, $F(x)$, measures the probability that a continuous random variable takes a value less than or equal to a specific boundary point $x$:
+\begin{equation}
+F(x) = P(X \le x) = \int_{-\infty}^{x} f(t) \, dt
+\end{equation}
+where by the Fundamental Theorem of Calculus, $F'(x) = f(x)$.
+
+\section{Expectations and Covariance}
+\subsection{Expectations}
+The expectation (or expected value) of a function $g(x)$ is the weighted average value of that function under a given probability distribution $P(x)$. 
+
+For a discrete distribution, it is defined as:
+\begin{equation}
+E[g] = \sum_{x} g(x)P(x)
+\end{equation}
+
+For a continuous distribution, the sum is replaced by an improper integral:
+\begin{equation}
+E[g] = \int_{-\infty}^{\infty} g(x)f(x) \, dx
+\end{equation}
+
+If we compute the expectation of the identity function $g(x)=x$, we obtain the distribution mean $\mu$:
+\begin{equation}
+E[X] = \mu
+\end{equation}
+
+\subsection{Covariance}
+The covariance between two random variables $X$ and $Y$ measures the degree of linear association between their variations:
+\begin{equation}
+\text{Cov}(X, Y) = E_{X,Y}\left[ (X - E[X])(Y - E[Y]) \right]
+\end{equation}
+
+Using the linearity property of expectations, this simplifies to a standard computational shortcut format:
+\begin{equation}
+\text{Cov}(X, Y) = E[XY] - E[X]E[Y]
+\end{equation}
+If $X$ and $Y$ are statistically independent variables, their covariance vanishes ($\text{Cov}(X, Y) = 0$).
+
+\section{The Likelihood Function}
+\subsection{Independent and Identically Distributed Data}
+Let $\mathcal{D} = \{x_1, x_2, \dots, x_N\}$ be a dataset of $N$ observations sampled independently from an underlying distribution governed by an unknown parameter vector $\mathbf{\theta}$. 
+
+Because the observations are independent and identically distributed (i.i.d.), the joint probability density of observing the entire dataset $\mathcal{D}$ given the parameter set $\mathbf{\theta}$ can be factored into a product of individual densities:
+\begin{equation}
+p(\mathcal{D} \mid \mathbf{\theta}) = \prod_{i=1}^{N} p(x_i \mid \mathbf{\theta})
+\end{equation}
+
+\subsection{Definition of Likelihood}
+When viewed as a function of the fixed data points $\mathcal{D}$ with respect to varying model parameterizations $\mathbf{\theta}$, this quantity is called the \textbf{Likelihood Function}, $L(\mathbf{\theta})$. It is crucial to note that $L(\mathbf{\theta})$ is \textit{not} a probability distribution over the parameters, meaning $\int L(\mathbf{\theta})d\mathbf{\theta} \neq 1$.
+
+\section{Maximum Likelihood Estimation (MLE)}
+\subsection{Optimization Objective}
+The objective of \textbf{Maximum Likelihood Estimation (MLE)} is to find the parameter configuration $\mathbf{\theta}_{\text{MLE}}$ that maximizes the likelihood function, thereby making the observed dataset as probable as possible under the chosen model model class:
+\begin{equation}
+\mathbf{\theta}_{\text{MLE}} = \arg\max_{\mathbf{\theta}} L(\mathbf{\theta})
+\end{equation}
+
+\subsection{The Log-Likelihood Transformation}
+Maximizing a product of many individual probabilities can lead to numerical underflow errors during computation. To prevent this, we apply a monotonic natural logarithm transformation. This turns the product into a sum without altering the location of the maximum point. The resulting expression is the \textbf{Log-Likelihood Function}:
+\begin{equation}
+\ln L(\mathbf{\theta}) = \sum_{i=1}^{N} \ln p(x_i \mid \mathbf{\theta})
+\end{equation}
+
+\subsection{Formal Gradient Condition}
+To find $\mathbf{\theta}_{\text{MLE}}$ formally, we calculate the gradient with respect to $\mathbf{\theta}$, set it equal to the zero vector, and solve the system of equations. This definitive machine learning condition is highlighted below:
+
+\begin{empheq}[box={\fcolorbox{red}{white}}]{equation}
+\nabla_{\mathbf{\theta}} \sum_{i=1}^{N} \ln p(x_i \mid \mathbf{\theta}) = \mathbf{0}
+\end{empheq}
+
+\end{document}
